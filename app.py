@@ -2,11 +2,12 @@ import streamlit as st
 import firebase_admin
 from firebase_admin import credentials, firestore
 from datetime import datetime, date
-
-from email_utils import enviar_email_promocional  # Importa função de envio de e-mail
+from email_utils import enviar_email_promocional, enviar_email_confirmacao_agendamento 
 
 # Inicializa o Firebase
-cred = credentials.Certificate("firebase-key.json")
+import json
+cred = credentials.Certificate(json.loads(st.secrets["FIREBASE"]))
+
 if not firebase_admin._apps:
     firebase_admin.initialize_app(cred)
 
@@ -112,6 +113,25 @@ elif aba == "Agendar Serviço":
                     "criado_em": datetime.now()
                 })
                 st.success(f"Serviço '{servico}' agendado para {cliente_escolhido[1]} em {data.strftime('%d/%m/%Y')} às {hora.strftime('%H:%M')}!")
+                    # Buscar e-mail do cliente para confirmação
+                cliente_doc = db.collection("clientes").document(cliente_escolhido[0]).get()
+                cliente_info = cliente_doc.to_dict()
+                email = cliente_info.get("email", "")
+                nome_cliente = cliente_info.get("nome", "")
+
+                if email:
+                    try:
+                        enviar_email_confirmacao_agendamento(
+                            email=email,
+                            nome=nome_cliente,
+                            servico=servico,
+                            data=data.strftime('%d/%m/%Y'),
+                            hora=hora.strftime('%H:%M')
+                        )
+                        st.info(f"E-mail de confirmação enviado para {email}.")
+                    except Exception as e:
+                        st.warning(f"Erro ao enviar e-mail: {e}")
+
 
 
 elif aba == "Registrar Compra":
