@@ -61,7 +61,7 @@ elif aba == "Cadastrar Pet":
             especie = st.selectbox("Espécie", ["Cachorro", "Gato", "Outro"])
             raca = st.text_input("Raça")
             nascimento = st.date_input(
-                "Data de nascimento do cliente",
+                "Data de nascimento do pet",
                 value=date(1990, 1, 1),  # valor inicial
                 min_value=date(1900, 1, 1),
                 max_value=date.today()
@@ -110,7 +110,11 @@ elif aba == "Agendar Serviço":
 
         with st.form("form_agendamento"):
             servico = st.selectbox("Serviço", ["Banho", "Tosa", "Vacinação", "Consulta Veterinária", "Outro"])
-            data = st.date_input("Data do serviço")
+            data = st.date_input(
+                    "Data do serviço",   
+                    value=date.today(),  
+                    min_value=date.today()
+                )
             hora = st.time_input("Hora do serviço")
             enviar = st.form_submit_button("Agendar")
 
