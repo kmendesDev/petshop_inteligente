@@ -3,6 +3,7 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 from datetime import datetime, date
 from email_utils import enviar_email_promocional, enviar_email_confirmacao_agendamento 
+from datetime import date
 
 # Inicializa o Firebase
 import json
@@ -26,7 +27,12 @@ if aba == "Cadastrar Cliente":
         nome = st.text_input("Nome completo")
         email = st.text_input("Email")
         telefone = st.text_input("Telefone")
-        nascimento = st.date_input("Data de nascimento do cliente")
+        nascimento = st.date_input(
+            "Data de nascimento do cliente",
+            value=date(1990, 1, 1),  # valor inicial
+            min_value=date(1900, 1, 1),
+            max_value=date.today()
+        )
         submitted = st.form_submit_button("Salvar")
 
         if submitted:
@@ -54,7 +60,12 @@ elif aba == "Cadastrar Pet":
             nome_pet = st.text_input("Nome do pet")
             especie = st.selectbox("Espécie", ["Cachorro", "Gato", "Outro"])
             raca = st.text_input("Raça")
-            nascimento = st.date_input("Data de nascimento")
+            nascimento = st.date_input(
+                "Data de nascimento do cliente",
+                value=date(1990, 1, 1),  # valor inicial
+                min_value=date(1900, 1, 1),
+                max_value=date.today()
+            )
             salvar_pet = st.form_submit_button("Salvar pet")
 
             if salvar_pet:
@@ -147,7 +158,11 @@ elif aba == "Registrar Compra":
         with st.form("form_compra"):
             produto = st.text_input("Produto ou serviço")
             valor = st.number_input("Valor (R$)", min_value=0.0, format="%.2f")
-            data = st.date_input("Data da compra")
+            data = st.date_input(
+                "Data da compra",    
+                value=date.today(),  
+                min_value=date.today()
+                )
             salvar_compra = st.form_submit_button("Salvar compra")
 
             if salvar_compra:
