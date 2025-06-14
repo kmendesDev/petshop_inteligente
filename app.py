@@ -6,7 +6,7 @@ from email_utils import enviar_email_promocional, enviar_email_confirmacao_agend
 
 # Inicializa o Firebase
 import json
-cred = credentials.Certificate(json.loads(st.secrets["FIREBASE"]))
+cred = credentials.Certificate(st.secrets["FIREBASE"])
 
 if not firebase_admin._apps:
     firebase_admin.initialize_app(cred)
